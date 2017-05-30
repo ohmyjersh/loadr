@@ -43,7 +43,7 @@ app.get('/:endpoint', (req, res) => {
 
 app.delete('/:endpoint', (req, res) => {
   let endpoint = getEndpoint(req);
-  let objects = realm.objects(schemaName).filtered(`endpoint = "${endpoint}"`);;
+  let objects = realm.objects(schemaName).filtered(`endpoint = "${endpoint}"`);
   realm.write(() => {
         realm.delete(objects);
     });
