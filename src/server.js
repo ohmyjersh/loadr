@@ -38,7 +38,6 @@ app.get('/:endpoint', (req, res) => {
         response = realm.objects(schemaName).filtered(`endpoint = "${endpoint}" AND time >= ${start} && time <= ${end}`);
     else
         response = realm.objects(schemaName).filtered(`endpoint = "${endpoint}"`);
-    console.log(response);
     res.status(200).send(`${response.length}`);
 })
 
