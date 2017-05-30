@@ -1,3 +1,7 @@
+#realm
+default.*
+realm-object-server/*
+
 # Logs
 logs
 *.log
