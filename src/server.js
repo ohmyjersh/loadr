@@ -1,4 +1,4 @@
- var express = require('express');
+var express = require('express');
 var Realm = require('realm');
 var app = express();
 
@@ -9,22 +9,20 @@ let realm = new Realm({
 
 getEndpoint = req => (req.params['endpoint']);
 
-app.post('/:endpoint', (req, res) => {
-    let endpoint = getEndpoint(req);
-    // should add headers to require auth or maybe sense a specific response
-    // if(!req.headers['authorization'])
-    //     return res.sendStatus(404);
+saveToRealm = endpoint => new Promise(() => {
     realm.write(() => {
         realm.create(schemaName, {time: +new Date(), endpoint: endpoint});
     });
+})
+
+app.post('/:endpoint', (req, res) => {
+    let endpoint = getEndpoint(req);
+    saveToRealm(endpoint);
     res.sendStatus(200);
 });
 
 app.put('/:endpoint', (req, res) => {
     let endpoint = getEndpoint(req);
-    // see above
-    // if(!req.headers['authorization'])
-    //     return res.sendStatus(404);
     realm.write(() => {
         realm.create(schemaName, {time: +new Date(), endpoint: endpoint});
     });
@@ -48,6 +46,14 @@ app.delete('/:endpoint', (req, res) => {
   let endpoint = getEndpoint(req);
   let objects = realm.objects(schemaName).filtered(`endpoint = "${endpoint}"`);;
   realm.write(() => {
+        realm.delete(objects);
+    });
+    res.sendStatus(200);
+});
+
+app.delete('/', (req, res) => {
+    let objects = realm.objects(schemaName);
+    realm.write(() => {
         realm.delete(objects);
     });
     res.sendStatus(200);
