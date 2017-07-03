@@ -1,0 +1,23 @@
+{
+  "name": "loadr",
+  "version": "1.0.0",
+  "description": "fake api ",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ohmyjersh/loadr.git"
+  },
+  "author": "JJ",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ohmyjersh/loadr/issues"
+  },
+  "homepage": "https://github.com/ohmyjersh/loadr#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "realm": "^1.8.3"
+  }
+}
