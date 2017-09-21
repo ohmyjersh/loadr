@@ -1,0 +1,41 @@
+{
+  "name": "loadr",
+  "version": "1.0.0",
+  "description": "mock api for testing third party integrations",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "prettier": "prettier --single-quote --trailing-comma es5 --write \"./src/**/*.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ohmyjersh/loadr.git"
+  },
+  "keywords": [
+    "loadr",
+    "load",
+    "testing",
+    "mock",
+    "server",
+    "no",
+    "load",
+    "testing",
+    "3rd",
+    "party",
+    "integrations"
+  ],
+  "author": "Josh Jarmain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ohmyjersh/loadr/issues"
+  },
+  "homepage": "https://github.com/ohmyjersh/loadr#readme",
+  "dependencies": {
+    "express": "^4.15.4",
+    "realm": "^1.11.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.7.0"
+  }
+}
