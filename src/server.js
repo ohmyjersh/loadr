@@ -9,7 +9,7 @@ let realm = new Realm({
   ],
 });
 
-getEndpoint = req => req.params['endpoint'];
+getEndpoint = req => req.url;
 
 saveToRealm = endpoint =>
   new Promise(() => {
@@ -18,13 +18,13 @@ saveToRealm = endpoint =>
     });
   });
 
-app.post('/:endpoint', (req, res) => {
+app.post('/:path*', (req, res) => {
   let endpoint = getEndpoint(req);
   saveToRealm(endpoint);
   res.sendStatus(200);
 });
 
-app.put('/:endpoint', (req, res) => {
+app.put('/:path*', (req, res) => {
   let endpoint = getEndpoint(req);
   realm.write(() => {
     realm.create(schemaName, { time: +new Date(), endpoint: endpoint });
@@ -32,8 +32,9 @@ app.put('/:endpoint', (req, res) => {
   res.sendStatus(200);
 });
 
-app.get('/:endpoint', (req, res) => {
+app.get('/:path*', (req, res) => {
   let endpoint = getEndpoint(req);
+  console.log(endpoint);
   let start = req.query.start;
   let end = req.query.end;
   let response;
@@ -48,7 +49,7 @@ app.get('/:endpoint', (req, res) => {
   res.status(200).send(`${response.length}`);
 });
 
-app.delete('/:endpoint', (req, res) => {
+app.delete('/:path*', (req, res) => {
   let endpoint = getEndpoint(req);
   let objects = realm.objects(schemaName).filtered(`endpoint = "${endpoint}"`);
   realm.write(() => {
@@ -65,6 +66,7 @@ app.delete('/', (req, res) => {
   res.sendStatus(200);
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log('loadr is loaded, send some stuff!');
+  console.log(`http://localhost:${process.env.PORT || 3000}`)
 });
