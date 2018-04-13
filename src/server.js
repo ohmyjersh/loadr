@@ -58,6 +58,30 @@ app.delete('/:path*', (req, res) => {
   res.sendStatus(200);
 });
 
+app.get('/', (req, res) => {
+  let objects = realm.objects(schemaName);
+  let objArr = objects.reduce((acc,curr) =>{
+    let find = acc.find(x => x.endpoint === curr.endpoint)
+      if(find) 
+      {
+        let index = acc.indexOf(x => x.endpoint === curr);
+        let newObj = {endpoint:find.endpoint, count: find.count +1};
+        return [...acc.slice(0, index), newObj, ...acc.slice(index + 1)]
+      }
+      else {
+        let newObj = {endpoint:curr.endpoint, count:1}
+        return [...acc, newObj]
+      }
+    },[]
+  );
+  res.status(200)
+    .send(`${JSON.
+          stringify(objArr)}`);
+});
+
+
+
+
 app.delete('/', (req, res) => {
   let objects = realm.objects(schemaName);
   realm.write(() => {
