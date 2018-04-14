@@ -3,7 +3,7 @@ var Realm = require('realm');
 var app = express();
 
 const schemaName = 'loadr';
-let realm = new Realm({
+const realm = new Realm({
   schema: [
     { name: schemaName, properties: { time: 'int', endpoint: 'string' } },
   ],
@@ -19,13 +19,13 @@ saveToRealm = endpoint =>
   });
 
 app.post('/:path*', (req, res) => {
-  let endpoint = getEndpoint(req);
+  const endpoint = getEndpoint(req);
   saveToRealm(endpoint);
   res.sendStatus(200);
 });
 
 app.put('/:path*', (req, res) => {
-  let endpoint = getEndpoint(req);
+  const endpoint = getEndpoint(req);
   realm.write(() => {
     realm.create(schemaName, { time: +new Date(), endpoint: endpoint });
   });
@@ -33,10 +33,10 @@ app.put('/:path*', (req, res) => {
 });
 
 app.get('/:path*', (req, res) => {
-  let endpoint = getEndpoint(req);
+  const endpoint = getEndpoint(req);
   console.log(endpoint);
-  let start = req.query.start;
-  let end = req.query.end;
+  const start = req.query.start;
+  const end = req.query.end;
   let response;
   if (start && end)
     response = realm
@@ -50,8 +50,8 @@ app.get('/:path*', (req, res) => {
 });
 
 app.delete('/:path*', (req, res) => {
-  let endpoint = getEndpoint(req);
-  let objects = realm.objects(schemaName).filtered(`endpoint = "${endpoint}"`);
+  const endpoint = getEndpoint(req);
+  const objects = realm.objects(schemaName).filtered(`endpoint = "${endpoint}"`);
   realm.write(() => {
     realm.delete(objects);
   });
@@ -59,31 +59,20 @@ app.delete('/:path*', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  let objects = realm.objects(schemaName);
-  let objArr = objects.reduce((acc,curr) =>{
-    let find = acc.find(x => x.endpoint === curr.endpoint)
-      if(find) 
-      {
-        let index = acc.indexOf(x => x.endpoint === curr);
-        let newObj = {endpoint:find.endpoint, count: find.count +1};
-        return [...acc.slice(0, index), newObj, ...acc.slice(index + 1)]
-      }
-      else {
-        let newObj = {endpoint:curr.endpoint, count:1}
-        return [...acc, newObj]
-      }
-    },[]
-  );
-  res.status(200)
-    .send(`${JSON.
-          stringify(objArr)}`);
+  const objects = realm.objects(schemaName);
+  const objArr = objects.reduce((acc,curr) => {
+    const index = acc.findIndex(x => x.endpoint === curr.endpoint);
+    return index !== -1 ? [...acc.slice(0, index), {endpoint:acc[index].endpoint, count: acc[index].count +1}, ...acc.slice(index + 1)] : addNewToArray(acc, curr);
+  },[]
+);
+res.status(200)
+  .send(`${JSON.stringify(objArr)}`);
 });
 
-
-
+const addNewToArray = (arr, item) => [...arr, {endpoint:item.endpoint, count:1}]
 
 app.delete('/', (req, res) => {
-  let objects = realm.objects(schemaName);
+  const objects = realm.objects(schemaName);
   realm.write(() => {
     realm.delete(objects);
   });
